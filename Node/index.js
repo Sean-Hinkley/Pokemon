@@ -15,6 +15,7 @@ MongoClient.connect(connectionString, {autoSelectFamily : false}).then(client =>
 
     app.get('/', (req, res) => {
         res.render('index.ejs');
+        
     })
 
     

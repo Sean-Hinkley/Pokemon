@@ -1,3 +1,4 @@
+console.log("Hello");
 import { Application } from 'pixi.js';
 
 // Asynchronous IIFE
