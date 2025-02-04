@@ -1,33 +1,29 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const MongoClient = require('mongodb').MongoClient;
+const {Server} = require('socket.io');
+const http = require('http');
 const app = express();
+const server = http.createServer(app);
+app.set('view engine', 'ejs');
 
-const connectionString = "mongodb+srv://sean:hi6yIe40@school.9eciq.mongodb.net/?retryWrites=true&w=majority&appName=School";
 
-MongoClient.connect(connectionString, {autoSelectFamily : false}).then(client => {
-    console.log('Connected to DB');
-    const db = client.db('company');
-    app.set('view engine', 'ejs');
-    app.use(bodyParser.urlencoded({extended: true}));
-    app.use(bodyParser.json());
-    app.use(express.static('public'));
 
-    app.get('/', (req, res) => {
-        res.render('index.ejs');
-        
-    })
 
-    app.get('/graphics', (req, res) => {
-        res.render('graphics.ejs');
-        
-    })
+app.get('/', (req, res) => {
+    res.render('index.ejs');
+})
 
-    
+app.get('/graphics', (req, res) => {
+    res.render('graphics.ejs');
+})
 
-    const port = 3000;
-    app.listen(port, function() {
-        console.log(`server on http://localhost:${port}`)
-    })
-}).catch(error => console.error(error))
 
+const io = new Server(server);
+
+io.on('connection', (socket) => {
+    console.log(`user Connected: ${socket.id}`);
+})
+
+server.listen(3000, () => {
+    console.log(`started on : http://localhost:3000`);
+})
