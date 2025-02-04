@@ -1,19 +1,11 @@
-
 import { Application, Assets, Sprite } from '/pixi.mjs';
 
-class Game {
-    
-    
-    Game() {
-
-    }
-}
 
 
-async function Call(app) {
-    
-    return fight;
-}
+
+
+
+
 
 // Asynchronous IIFE
 (async () =>
@@ -30,14 +22,13 @@ async function Call(app) {
 
     //Fight Button
     let texture = await Assets.load('/Imgs/Fight.png');
-    const fight = new Sprite(texture);
+    let fight =  new Sprite(texture);
     app.stage.addChild(fight);
 
     fight.x = 1100;
     fight.y = 600;
-    //fight.scale.y = 3;
-    fight.scale.x = 3;
-
+    fight.scale = 3,3;
+    
     //Item Button
     texture = await Assets.load('/Imgs/Item.png');
     const item = new Sprite(texture);
@@ -45,8 +36,7 @@ async function Call(app) {
 
     item.x = 1400;
     item.y = 600;
-    item.scale.y = 3;
-    item.scale.x = 3;
+    item.scale = 3,3;
 
     //Bag Button
     texture = await Assets.load('/Imgs/Bag.png');
@@ -55,8 +45,7 @@ async function Call(app) {
 
     bag.x = 1100;
     bag.y = 750;
-    bag.scale.y = 3;
-    bag.scale.x = 3;
+    bag.scale = 3,3;
 
     //Run Button
     texture = await Assets.load('/Imgs/Run.png');
@@ -65,22 +54,44 @@ async function Call(app) {
 
     run.x = 1400;
     run.y = 750;
-    run.scale.y = 3;
-    run.scale.x = 3;
+    run.scale = 3,3;
+
 
 
     run.eventMode = 'static';
-
-    // Shows hand cursor
     run.cursor = 'pointer';
+    run.on('pointerdown', runClick);
 
-    // Pointers normalize touch and mouse (good for mobile and desktop)
-    run.on('pointerdown', onClick);
+    fight.eventMode = 'static';
+    fight.cursor = 'pointer';
+    fight.on('pointerdown', fightClick);
+
+    bag.eventMode = 'static';
+    bag.cursor = 'pointer';
+    bag.on('pointerdown', bagClick);
+    
+    item.eventMode = 'static';
+    item.cursor = 'pointer';
+    item.on('pointerdown', itemClick);
 
     app.ticker.add((time) => {
         
     });
 })();
-function onClick() {
-    console.log("works");
+
+
+function runClick() {
+    console.log("Run");
+}
+
+function bagClick() {
+    console.log("Bag");
+}
+
+function fightClick() { 
+    console.log("Fight");
+}
+
+function itemClick() {
+    console.log("Item");
 }
