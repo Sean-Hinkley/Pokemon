@@ -18,6 +18,11 @@ MongoClient.connect(connectionString, {autoSelectFamily : false}).then(client =>
         
     })
 
+    app.get('/graphics', (req, res) => {
+        res.render('graphics.ejs');
+        
+    })
+
     
 
     const port = 3000;
