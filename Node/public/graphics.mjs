@@ -1,12 +1,12 @@
-import { Container } from './pixi.mjs';
-import { Application, Assets, Sprite, Graphics,Rectangle } from '/pixi.mjs';
+import { Container } from '/pixis.mjs';
+import { Application, Assets, Sprite, Graphics,Rectangle } from '/pixis.mjs';
 
 let menu = 0;
 
 class MenuSwitch {
     constructor(app) {
-         this.screens = [new BaseMenu(app),new FightMenu(app)];
-         this.render = 0;
+         this.screens = [new BaseMenu(app, 850,400),new FightMenu(app,850,400)];
+         this.render = 0
     }   
     setrender(ren) {
         this.render = ren;
@@ -40,17 +40,20 @@ class GameCont extends Container {
 
 
 class BaseMenu extends GameCont{
-    constructor(app) {
+    constructor(app, x, y) {
         super(app);
+        this.x = x;
+        this.y = y;
     }
-    async activate() {
+
+    async fightAct() {
         //Fight Button
         let texture = await Assets.load('/Imgs/Fight.png');
         const fight = new GameObj(texture);
         this.addChild(fight);
-        fight.x = 1100;
-        fight.y = 600;
-        fight.scale = 3,3;
+        fight.x = 0;
+        fight.y = 0;
+        fight.scale = 2,2;
         fight.eventMode = 'static';
         // Shows hand cursor
         fight.cursor = 'pointer';
@@ -58,63 +61,62 @@ class BaseMenu extends GameCont{
         fight.on('pointerdown', function(event)  {
             menu = 1;
         });
+    }
+
+    async itemAct() {
         //Item Button
-        texture = await Assets.load('/Imgs/Item.png');
+        let texture = await Assets.load('/Imgs/Item.png');
         const item = new Sprite(texture);
         this.addChild(item);
-        item.x = 1400;
-        item.y = 600;
-        item.scale = 3,3;
+        item.x = 200;
+        item.y = 0;
+        item.scale = 2,2;
+    }
+
+    async bagAct() {
         //Bag Button
-        texture = await Assets.load('/Imgs/Bag.png');
+        let texture = await Assets.load('/Imgs/Bag.png');
         const bag = new Sprite(texture);
         this.addChild(bag);
-        bag.x = 1100;
-        bag.y = 750;
-        bag.scale = 3,3;
+        bag.x = 0;
+        bag.y = 75;
+        bag.scale = 2,2;
+    }
+
+    async runAct() {
         //Run Button
-        texture = await Assets.load('/Imgs/Run.png');
+        let texture = await Assets.load('/Imgs/Run.png');
         const run = new Sprite(texture);
         this.addChild(run);
-        run.x = 1400;
-        run.y = 750;
-        run.scale = 3,3;    
+        run.x = 200;
+        run.y = 75;
+        run.scale = 2,2;  
+    }
+    async activate() {
+        
+        this.fightAct();
+        this.itemAct();
+        this.bagAct();
+        this.runAct();
+        
+        
+          
     }
 }   
 class FightMenu extends GameCont {
-    constructor(app) {
+    constructor(app, x, y) {
         super(app);
+        this.x = x;
+        this.y = y;
     }
-    async activate() {
+
+    async bck() {
         let texture = await Assets.load('/Imgs/Bck.png');
         const fight = new GameObj(texture);
         this.addChild(fight);
-        fight.x = 1000;
-        fight.y = 600;
-        texture = await Assets.load('/Imgs/Att.png');
-        const a = new GameObj(texture);
-        this.addChild(a);
-        a.x = 1100;
-        a.y = 600;
-        a.scale = 3,3;
-        texture = await Assets.load('/Imgs/Att.png');
-        const b = new GameObj(texture);
-        this.addChild(b);
-        b.x = 1400;
-        b.y = 600;
-        b.scale = 3,3;
-        texture = await Assets.load('/Imgs/Att.png');
-        const c = new GameObj(texture);
-        this.addChild(c);
-        c.x = 1100;
-        c.y = 750;
-        c.scale = 3,3;
-        texture = await Assets.load('/Imgs/Att.png');
-        const d = new GameObj(texture);
-        this.addChild(d);
-        d.x = 1400;
-        d.y = 750;
-        d.scale = 3,3;
+        fight.x = -75;
+        fight.y = 0;
+        fight.scale = .75;
         fight.eventMode = 'static';
         // Shows hand cursor
         fight.cursor = 'pointer';
@@ -122,6 +124,45 @@ class FightMenu extends GameCont {
         fight.on('pointerdown', function(event)  {
             menu = 0;
         });
+    } 
+
+    async attbtn(plc) {
+        let x = 0;
+        let y = 0;
+        
+        switch(plc) {
+            case 0: 
+                x = 0;
+                y = 0;
+                break;
+            case 1: 
+                x = 200;
+                y = 0;
+                break;
+            case 2: 
+                x = 0;
+                y = 75;
+                break;
+            case 3: 
+                x = 200;
+                y = 75;
+                break;
+        }
+        let texture = await Assets.load('/Imgs/Att.png');
+        const fight = new GameObj(texture);
+        this.addChild(fight);
+        fight.x = x;
+        fight.y = y;
+        fight.scale = 2,2;
+    }
+    async activate() {
+        this.bck(this.x,this.y);
+        this.attbtn(0);
+        this.attbtn(1);
+        this.attbtn(2);
+        this.attbtn(3);
+        
+        
     }
 
 }
@@ -132,12 +173,13 @@ class FightMenu extends GameCont {
 // Asynchronous IIFE
 (async () =>
     {
+        let g = document.querySelector('.game');
         // Create a PixiJS application.
         const app = new Application();
         // Intialize the application.
-        await app.init({ background: '#555555', resizeTo: window });
+        await app.init({ background: '#555555', resizeTo: g });
         // Then adding the application's canvas to the DOM body.
-        document.body.appendChild(app.canvas);
+        g.appendChild(app.canvas);
         let game = new MenuSwitch(app);
         app.ticker.add((time) => {
             gameLoop(app,game); 
