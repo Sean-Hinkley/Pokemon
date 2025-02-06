@@ -1,3 +1,4 @@
+const db = require('./db.js');
 const express = require('express');
 const http = require('http');
 const expressLayouts = require('express-ejs-layouts')
@@ -20,21 +21,38 @@ app.get('/game', (req,res) => {
     
 })
 
+const bodyParser = require('body-parser');
+const MongoClient = require('mongodb').MongoClient;
+
+const connectionString = 'mongodb+srv://<db_username>:<Kamehameha!1>@school.9eciq.mongodb.net/?retryWrites=true&w=majority&appName=School';
+
+MongoClient.connect(connectionString, {autoSelectFamily : false}).then(client => {
+    console.log('Connected to DB');
+    const db = client.db('pokemon');
+    const employeesCollection = db.collection('users');
 
 
+    
 
-const io = new Server(server);
+}).catch(error => console.error(error))
+
+
+const io = new Server(server, {
+
+});
 
 io.on('connection', (socket) => {
     console.log(`User Connected: ${socket.id}`);
-    const lis = document.querySelector('.users');
-    const it = document.createElement("li");
-    it.innerHTML = socket.id; 
-    if(lis!=null) {
-        lis.appendChild(it);
-    }
+    socket.on('userlogged', (socket) => {
+        console.log("hello");
+    })
 });
+
+
+
+
 
 server.listen(3000, () => {
     console.log('started on: http://localhost:3000');
 })
+

@@ -8,29 +8,11 @@
 <body>
     
     <div class="row text-center">
-        <div class="col">
-            <h2>Users</h2>
-            <ul class="users"></ul>
-        </div>
+        <%- include('./partials/user.ejs') %>
         <div class="col">
             <h2>Invites</h2>
             <ul class="invites"></ul>
         </div>
     </div>
-    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
-    <script>
-        let socket = io();
-    </script>
-    <script>
-        socket.on('connection', (socket) => {
-            const lis = document.querySelector('.users');
-            const it = document.createElement("li");
-            it.innerHTML = socket.id; 
-            if(lis!=null) {
-                lis.appendChild(it);
-            }
-        })
-    </script>
-    
 </body>
 </html>
