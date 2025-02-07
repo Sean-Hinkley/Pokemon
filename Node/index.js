@@ -25,53 +25,14 @@ MongoClient.connect(connectionString, {autoSelectFamily : false}).then(client =>
     console.log('Connected to DB');
     const db = client.db('pokemon');
     const usersCollection = db.collection('users');
-    
-    app.get('/users', (req,res) => {
-        usersCollection.find().toArray().then(usersData => {
-            res.render('./Users/users.ejs', {users: usersData, title: 'Users'});
-        })
-        .catch(/* */);
-    })
-
-    app.get('/users/:id', (req,res) => {
-        usersCollection.find().toArray().then(usersData => {
-            res.render('./Users/users.ejs', {users: usersData, title: 'Users'});
-        })
-        .catch(/* */);
-    })
-    
-    app.post('/user', (req,res) => {
-        usersCollection.insertOne(req.body)
-        .then(result => {
-            res.redirect('/users');
-        })
-        .catch(error => console.error(error))
-    })
-
-    app.post('/findUser', (req,res) => {
-        usersCollection.findOne(req.body)
-        .then(result => {
-            loggedUser = result;
-            console.log(loggedUser);
-            res.redirect('/game');
-        })
-        .catch(error => console.error(error))
-    })
 
     app.get('/', (req,res) => {
         res.render('index.ejs', {title: 'Home Page'});
     })
-        app.get('/game', (req,res) => {
-            res.render('graphics.ejs', {title: 'Game'});
-            
-        });
-    app.get('/createUser', (req,res) => {
-        res.render('./Users/createUser.ejs', {title: "CreateUser"});
-    })
-    app.get('/login', (req,res) => {
-        res.render('./Users/login.ejs', {title: "Login"});
+    app.get('/game', (req,res) => {
+        res.render('graphics.ejs', {title: 'Game'});
+        
     });
-
 }).catch(error => console.error(error))
 
 
@@ -83,7 +44,7 @@ io.on('connection', (socket) => {
     console.log(`User Connected: ${socket.id}`);
     socket.on('userlogged', (socket) => {
         console.log("hello");
-    })
+    });
 });
 
 
