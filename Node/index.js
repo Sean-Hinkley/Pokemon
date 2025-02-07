@@ -1,9 +1,11 @@
-const db = require('./db.js');
+
 const express = require('express');
 const http = require('http');
 const expressLayouts = require('express-ejs-layouts')
 const {Server} = require('socket.io');
-
+const bodyParser = require('body-parser');
+const MongoClient = require('mongodb').MongoClient;
+const connectionString = "mongodb+srv://seanhinkley567:hi6yIe40@school.9eciq.mongodb.net/?retryWrites=true&w=majority&appName=School";
 const app = express();
 const server = http.createServer(app);
 
@@ -11,28 +13,64 @@ app.use(express.static('public'));
 app.use(expressLayouts);
 app.set('layout', './layouts/main');
 app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
-app.get('/', (req,res) => {
-    res.render('index.ejs', {title: 'Home Page'});
-})
+let loggedUser = null;
 
-app.get('/game', (req,res) => {
-    res.render('graphics.ejs', {title: 'Game'});
-    
-})
 
-const bodyParser = require('body-parser');
-const MongoClient = require('mongodb').MongoClient;
 
-const connectionString = 'mongodb+srv://<db_username>:<Kamehameha!1>@school.9eciq.mongodb.net/?retryWrites=true&w=majority&appName=School';
 
 MongoClient.connect(connectionString, {autoSelectFamily : false}).then(client => {
     console.log('Connected to DB');
     const db = client.db('pokemon');
-    const employeesCollection = db.collection('users');
-
-
+    const usersCollection = db.collection('users');
     
+    app.get('/users', (req,res) => {
+        usersCollection.find().toArray().then(usersData => {
+            res.render('./Users/users.ejs', {users: usersData, title: 'Users'});
+        })
+        .catch(/* */);
+    })
+
+    app.get('/users/:id', (req,res) => {
+        usersCollection.find().toArray().then(usersData => {
+            res.render('./Users/users.ejs', {users: usersData, title: 'Users'});
+        })
+        .catch(/* */);
+    })
+    
+    app.post('/user', (req,res) => {
+        usersCollection.insertOne(req.body)
+        .then(result => {
+            res.redirect('/users');
+        })
+        .catch(error => console.error(error))
+    })
+
+    app.post('/findUser', (req,res) => {
+        usersCollection.findOne(req.body)
+        .then(result => {
+            loggedUser = result;
+            console.log(loggedUser);
+            res.redirect('/game');
+        })
+        .catch(error => console.error(error))
+    })
+
+    app.get('/', (req,res) => {
+        res.render('index.ejs', {title: 'Home Page'});
+    })
+        app.get('/game', (req,res) => {
+            res.render('graphics.ejs', {title: 'Game'});
+            
+        });
+    app.get('/createUser', (req,res) => {
+        res.render('./Users/createUser.ejs', {title: "CreateUser"});
+    })
+    app.get('/login', (req,res) => {
+        res.render('./Users/login.ejs', {title: "Login"});
+    });
 
 }).catch(error => console.error(error))
 
