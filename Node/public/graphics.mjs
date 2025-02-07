@@ -79,7 +79,7 @@ class BaseMenu extends GameCont{
         const bag = new Sprite(texture);
         this.addChild(bag);
         bag.x = 0;
-        bag.y = 75;
+        bag.y = 85;
         bag.scale = 2,2;
     }
 
@@ -89,7 +89,7 @@ class BaseMenu extends GameCont{
         const run = new Sprite(texture);
         this.addChild(run);
         run.x = 200;
-        run.y = 75;
+        run.y = 85;
         run.scale = 2,2;  
     }
     async activate() {
@@ -141,11 +141,11 @@ class FightMenu extends GameCont {
                 break;
             case 2: 
                 x = 0;
-                y = 75;
+                y = 85;
                 break;
             case 3: 
                 x = 200;
-                y = 75;
+                y = 85;
                 break;
         }
         let texture = await Assets.load('/Imgs/Att.png');
